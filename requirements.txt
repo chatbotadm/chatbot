@@ -2,4 +2,4 @@ streamlit
 google-generativeai
 python-dotenv
 Flask==2.1.0
-
+Werkzeug==1.0.1

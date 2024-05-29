@@ -22,9 +22,7 @@ favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
 st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 
 # Streamlit app title
-# Streamlit app title
 st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-
 
 # Initialize chat history in session state
 if 'chat_history' not in st.session_state:
@@ -36,7 +34,7 @@ input = st.text_input("", key="input")  # Empty label since we are using markdow
 submit = st.button("Ask the question")
 
 # Add note below the input box
-st.markdown("(This site uses Gemini 1.0)")
+st.markdown("<div style='text-align: center;'>This site uses Gemini 1.0</div>", unsafe_allow_html=True)
 
 # Handle user input and get response
 if submit and input:
@@ -48,10 +46,19 @@ if submit and input:
         st.write(chunk.text)
         st.session_state['chat_history'].append(("Bot", chunk.text))
 
-# Add an image to the webpage
-image_path = "./dmm.jpg"  # Assuming dmm.jpg is in the same directory
-st.image(image_path, caption="Divyansh Mittal is a 13-year-old prodigy and the creative mind behind Chatbot.ai. With a passion for artificial intelligence and programming, Divyansh has embarked on a journey to revolutionize the way we interact with technology. Chatbot.ai is the culmination of his dedication and innovative spirit, offering users a glimpse into the future of AI-powered conversations.
-Driven by curiosity and fueled by determination, Divyansh continues to push the boundaries of what's possible in the world of technology. With Chatbot.ai, he aims to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.", use_column_width=True)
+# Add your picture and description
+st.markdown("<hr>", unsafe_allow_html=True)
+st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (developer of CHATBOT.ai)", use_column_width=True)
+st.markdown(
+    """
+    <div style='text-align: center;'>
+        <h2>About Divyansh Mittal, Creator of Chatbot.ai</h2>
+        <p>Divyansh Mittal is a 13-year-old prodigy and the creative mind behind Chatbot.ai. With a passion for artificial intelligence and programming, Divyansh has embarked on a journey to revolutionize the way we interact with technology. Chatbot.ai is the culmination of his dedication and innovative spirit, offering users a glimpse into the future of AI-powered conversations.</p>
+        <p>Driven by curiosity and fueled by determination, Divyansh continues to push the boundaries of what's possible in the world of technology. With Chatbot.ai, he aims to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Add a black section for support email
 st.markdown(

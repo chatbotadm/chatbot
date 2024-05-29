@@ -43,10 +43,6 @@ if submit and input:
         st.write(chunk.text)
         st.session_state['chat_history'].append(("Bot", chunk.text))
 
-# Display chat history
-st.subheader("The Chat History is")
-for role, text in st.session_state['chat_history']:
-    st.write(f"{role}: {text}")
 
 # Add an image to the webpage
 image_path = "./dmm.jpg"  # Assuming dmm.jpg is in the same directory
@@ -79,4 +75,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-

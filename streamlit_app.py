@@ -33,6 +33,9 @@ st.markdown("**Input:**")
 input = st.text_input("", key="input")  # Empty label since we are using markdown for label
 submit = st.button("Ask the question")
 
+# Add note below the input box
+st.markdown("This site uses Gemini 1.0")
+
 # Handle user input and get response
 if submit and input:
     response = get_gemini_response(input)
@@ -42,7 +45,6 @@ if submit and input:
     for chunk in response:
         st.write(chunk.text)
         st.session_state['chat_history'].append(("Bot", chunk.text))
-
 
 # Add an image to the webpage
 image_path = "./dmm.jpg"  # Assuming dmm.jpg is in the same directory

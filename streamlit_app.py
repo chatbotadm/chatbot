@@ -52,9 +52,9 @@ st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (developer of CHATBOT.ai
 st.markdown(
     """
     <div style='text-align: center;'>
-        <h2>About Divyansh Mittal, Creator of Chatbot.ai</h2>
-        <p>Divyansh Mittal is a 13-year-old prodigy and the creative mind behind Chatbot.ai. With a passion for artificial intelligence and programming, Divyansh has embarked on a journey to revolutionize the way we interact with technology. Chatbot.ai is the culmination of his dedication and innovative spirit, offering users a glimpse into the future of AI-powered conversations.</p>
-        <p>Driven by curiosity and fueled by determination, Divyansh continues to push the boundaries of what's possible in the world of technology. With Chatbot.ai, he aims to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
+        <h2>About Me: Divyansh Mittal, Creator of Chatbot.ai</h2>
+        <p>Hey there! I'm Divyansh Mittal, the brains behind Chatbot.ai. At just 13 years old, I'm passionate about artificial intelligence and programming. Chatbot.ai is my brainchild, born out of my fascination with how technology can shape our future.</p>
+        <p>With Chatbot.ai, I'm on a mission to revolutionize the way we interact with AI. My goal is to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
     </div>
     """,
     unsafe_allow_html=True
@@ -87,3 +87,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+

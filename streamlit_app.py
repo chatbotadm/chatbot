@@ -74,7 +74,7 @@ st.markdown(
     <div class="support-section">
         <h4>Support</h4>
         <p>If you have any questions or need support, please contact us at:</p>
-        <p><a href="mailto:support@example.com">support@example.com</a></p>
+        <p><a href="mailto:chatbot.aidm@gmail.com">chatbot.aidm@gmail.com</a></p>
     </div>
     """,
     unsafe_allow_html=True

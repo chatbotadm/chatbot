@@ -22,7 +22,9 @@ favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
 st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 
 # Streamlit app title
-st.header("AI CHATBOT")
+# Streamlit app title
+st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
+
 
 # Initialize chat history in session state
 if 'chat_history' not in st.session_state:

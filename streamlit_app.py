@@ -46,7 +46,7 @@ if submit and input:
 
 # Add an image to the webpage
 image_path = "./dmm.jpg"  # Assuming dmm.jpg is in the same directory
-st.image(image_path, caption="DIVYANSH MITTAL (developer of CHATBOTst.ai)", use_column_width=True)
+st.image(image_path, caption="DIVYANSH MITTAL (developer of CHATBOT.ai)", use_column_width=True)
 
 # Add a black section for support email
 st.markdown(

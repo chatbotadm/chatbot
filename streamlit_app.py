@@ -50,7 +50,8 @@ if submit and input:
 
 # Add an image to the webpage
 image_path = "./dmm.jpg"  # Assuming dmm.jpg is in the same directory
-st.image(image_path, caption="DIVYANSH MITTAL (developer of CHATBOT.ai)", use_column_width=True)
+st.image(image_path, caption="Divyansh Mittal is a 13-year-old prodigy and the creative mind behind Chatbot.ai. With a passion for artificial intelligence and programming, Divyansh has embarked on a journey to revolutionize the way we interact with technology. Chatbot.ai is the culmination of his dedication and innovative spirit, offering users a glimpse into the future of AI-powered conversations.
+Driven by curiosity and fueled by determination, Divyansh continues to push the boundaries of what's possible in the world of technology. With Chatbot.ai, he aims to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.", use_column_width=True)
 
 # Add a black section for support email
 st.markdown(

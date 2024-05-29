@@ -34,7 +34,7 @@ input = st.text_input("", key="input")  # Empty label since we are using markdow
 submit = st.button("Ask the question")
 
 # Add note below the input box
-st.markdown("This site uses Gemini 1.0")
+st.markdown("(This site uses Gemini 1.0)")
 
 # Handle user input and get response
 if submit and input:

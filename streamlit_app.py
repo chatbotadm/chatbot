@@ -64,7 +64,7 @@ st.markdown(
 st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
 
 # Version number
-st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.2 beta</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.1(beta)</h3>", unsafe_allow_html=True)
 
 # Initialize chat history in session state
 if 'chat_history' not in st.session_state:

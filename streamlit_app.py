@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import streamlit as st
 import os
 import google.generativeai as genai
+import requests
 
 # Load environment variables
 load_dotenv()
@@ -13,19 +14,57 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[])
 
-def get_gemini_response(question):
-    response = chat.send_message(question, stream=True)
-    return response
+# Function to send event data to Google Analytics
+def track_event(category, action, label=None, value=0):
+    # Google Analytics Measurement ID
+    measurement_id = 'G-D2SGDPD37T'  # Replace this with your Google Analytics Measurement ID
+
+    # API endpoint for Google Analytics Measurement Protocol
+    endpoint = 'https://www.google-analytics.com/collect'
+
+    # Data payload
+    data = {
+        'v': '1',  # API version
+        'tid': measurement_id,  # Measurement ID
+        'cid': '555',  # Anonymous client ID
+        't': 'event',  # Hit type: event
+        'ec': category,  # Event category
+        'ea': action,  # Event action
+        'el': label,  # Event label
+        'ev': value,  # Event value
+    }
+
+    # Send the data to Google Analytics
+    response = requests.post(endpoint, data=data)
+
+    # Print the response (for debugging)
+    print(response.text)
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
 st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 
+# Google Analytics Global Site Tag (gtag.js) script
+st.markdown(
+    """
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGDPD37T"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-D2SGDPD37T');
+    </script>
+    """,
+    unsafe_allow_html=True
+)
+
 # Streamlit app title
 st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
 
 # Version number
-st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.1 beta</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.2 beta</h3>", unsafe_allow_html=True)
 
 # Initialize chat history in session state
 if 'chat_history' not in st.session_state:
@@ -36,18 +75,18 @@ st.markdown("**Input:**")
 input = st.text_input("", key="input")  # Empty label since we are using markdown for label
 submit = st.button("Ask the question")
 
-# Add note below the input box
-st.markdown("This site uses Gemini 1.0")
-
 # Handle user input and get response
 if submit and input:
-    response = get_gemini_response(input)
+    response = chat.send_message(input, stream=True)
     
     st.session_state['chat_history'].append(("You", input))
     st.subheader("The Response is")
     for chunk in response:
         st.write(chunk.text)
         st.session_state['chat_history'].append(("Bot", chunk.text))
+    
+    # Track the user interaction with the chatbot
+    track_event(category='User Interaction', action='Question Asked', label=input, value=1)
 
 # Add your picture and description
 st.markdown("<hr>", unsafe_allow_html=True)

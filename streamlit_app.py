@@ -18,7 +18,7 @@ def get_gemini_response(question):
     return response
 
 # Set page title and favicon
-favicon_path = "C:/Users/Rahul/Downloads/rp_flask_api/static/favicon.ico"
+favicon_path = "C:/Users/Rahul/Downloads/geminiai/favicon.ico"
 st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 
 # Streamlit app title
@@ -48,5 +48,5 @@ for role, text in st.session_state['chat_history']:
     st.write(f"{role}: {text}")
 
 # Add an image to the webpage
-image_url = r"C:/Users/Rahul/Downloads/geminiai/static/dmm.jpg"  # Use raw string to avoid escape character issues
+image_url = r"C:/Users/Rahul/Downloads/geminiai/dmm.jpg"  # Use raw string to avoid escape character issues
 st.image(image_url, caption="DIVYANSH MITTAL(developer of CHATBOTst.ai)", use_column_width=True)

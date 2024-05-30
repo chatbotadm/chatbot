@@ -3,6 +3,3 @@ google-generativeai
 python-dotenv
 Flask
 Werkzeug
-pyaudio
-speechrecognition
-

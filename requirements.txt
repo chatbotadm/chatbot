@@ -4,7 +4,5 @@ python-dotenv
 Flask
 Werkzeug
 speechrecognition
-sounddevice
-scipy
 
 

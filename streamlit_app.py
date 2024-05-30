@@ -1,12 +1,13 @@
 import os
-import requests
+from dotenv import load_dotenv
 import streamlit as st
 import google.generativeai as genai
-from PIL import Image
-from io import BytesIO
-import base64
+import speech_recognition as sr
 
-# Configure the API for Google Generative AI
+# Load environment variables
+load_dotenv()
+
+# Configure the API
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Initialize the chat model
@@ -17,27 +18,22 @@ def get_gemini_response(question):
     response = chat.send_message(question, stream=True)
     return response
 
-def generate_image_from_text(text):
-    url = "https://api.stability.ai/v2beta1/generate"
-    headers = {
-        'Authorization': 'Bearer sk-Cp1jgaazvk59qiuG4rpJHMLM8jf0df5JjHh8ZLWc6HIre8YT',
-        'Content-Type': 'application/json',
-    }
-    data = {
-        'text_prompts': [{'text': text}],
-        'cfg_scale': 7,
-        'clip_guidance_preset': 'FAST_BLUE',
-        'height': 512,
-        'width': 512,
-        'samples': 1,
-        'steps': 50,
-    }
-    response = requests.post(url, headers=headers, json=data)
-    result = response.json()
-    image_base64 = result['artifacts'][0]['base64']
-    image_bytes = base64.b64decode(image_base64)
-    image = Image.open(BytesIO(image_bytes))
-    return image
+# Function to recognize speech from microphone
+def recognize_speech():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        st.write("Speak now...")
+        audio = r.listen(source)
+
+    try:
+        st.write("Processing...")
+        query = r.recognize_google(audio)
+        st.text_input("You said:", query)
+        return query
+    except sr.UnknownValueError:
+        st.error("Sorry, I could not understand what you said.")
+    except sr.RequestError as e:
+        st.error(f"Could not request results from Google Speech Recognition service; {e}")
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
@@ -53,28 +49,16 @@ st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.1 beta</h3>",
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
-# Bold input label
-st.markdown("**Input:**")
-input = st.text_input("", key="input")  # Empty label since we are using markdown for label
-submit = st.button("Ask the question")
-generate_image = st.button("Generate Image")
-
-# Add note below the input box
-st.markdown("This site uses Gemini 1.0")
-
-# Handle user input and get response
-if submit and input:
-    response = get_gemini_response(input)
-    st.session_state['chat_history'].append(("You", input))
-    st.subheader("The Response is")
-    for chunk in response:
-        st.write(chunk.text)
-        st.session_state['chat_history'].append(("Bot", chunk.text))
-
-# Handle image generation
-if generate_image and input:
-    image = generate_image_from_text(input)
-    st.image(image, caption=f"Generated image for: {input}", use_column_width=True)
+# Button to activate speech recognition
+if st.button("Speak"):
+    query = recognize_speech()
+    if query:
+        response = get_gemini_response(query)
+        st.session_state['chat_history'].append(("You", query))
+        st.subheader("The Response is")
+        for chunk in response:
+            st.write(chunk.text)
+            st.session_state['chat_history'].append(("Bot", chunk.text))
 
 # Add your picture and description
 st.markdown("<hr>", unsafe_allow_html=True)

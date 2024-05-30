@@ -1,12 +1,12 @@
 import os
-from dotenv import load_dotenv
+import requests
 import streamlit as st
 import google.generativeai as genai
+from PIL import Image
+from io import BytesIO
+import base64
 
-# Load environment variables
-load_dotenv()
-
-# Configure the API
+# Configure the API for Google Generative AI
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Initialize the chat model
@@ -16,6 +16,28 @@ chat = model.start_chat(history=[])
 def get_gemini_response(question):
     response = chat.send_message(question, stream=True)
     return response
+
+def generate_image_from_text(text):
+    url = "https://api.stability.ai/v2beta1/generate"
+    headers = {
+        'Authorization': 'Bearer sk-Cp1jgaazvk59qiuG4rpJHMLM8jf0df5JjHh8ZLWc6HIre8YT',
+        'Content-Type': 'application/json',
+    }
+    data = {
+        'text_prompts': [{'text': text}],
+        'cfg_scale': 7,
+        'clip_guidance_preset': 'FAST_BLUE',
+        'height': 512,
+        'width': 512,
+        'samples': 1,
+        'steps': 50,
+    }
+    response = requests.post(url, headers=headers, json=data)
+    result = response.json()
+    image_base64 = result['artifacts'][0]['base64']
+    image_bytes = base64.b64decode(image_base64)
+    image = Image.open(BytesIO(image_bytes))
+    return image
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
@@ -35,6 +57,7 @@ if 'chat_history' not in st.session_state:
 st.markdown("**Input:**")
 input = st.text_input("", key="input")  # Empty label since we are using markdown for label
 submit = st.button("Ask the question")
+generate_image = st.button("Generate Image")
 
 # Add note below the input box
 st.markdown("This site uses Gemini 1.0")
@@ -47,6 +70,11 @@ if submit and input:
     for chunk in response:
         st.write(chunk.text)
         st.session_state['chat_history'].append(("Bot", chunk.text))
+
+# Handle image generation
+if generate_image and input:
+    image = generate_image_from_text(input)
+    st.image(image, caption=f"Generated image for: {input}", use_column_width=True)
 
 # Add your picture and description
 st.markdown("<hr>", unsafe_allow_html=True)

@@ -3,7 +3,6 @@ google-generativeai
 python-dotenv
 Flask
 Werkzeug
-requests
-Pillow
-
+pyaudio
+speechrecognition
 

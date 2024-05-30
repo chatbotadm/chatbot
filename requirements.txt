@@ -4,6 +4,5 @@ python-dotenv
 Flask
 Werkzeug
 speechrecognition
-pyaudio
 
 

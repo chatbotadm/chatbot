@@ -1,8 +1,11 @@
 import os
+import tempfile
 from dotenv import load_dotenv
 import streamlit as st
 import google.generativeai as genai
 import speech_recognition as sr
+import sounddevice as sd
+import scipy.io.wavfile as wavfile
 
 # Load environment variables
 load_dotenv()
@@ -19,10 +22,23 @@ def get_gemini_response(question):
     return response
 
 def recognize_speech():
+    samplerate = 16000  # Sample rate for audio recording
+    duration = 5  # Duration to record in seconds
+    st.write("Say something!")
+    st.markdown("*Listening...*")
+    
+    # Record audio
+    audio_data = sd.rec(int(samplerate * duration), samplerate=samplerate, channels=1, dtype='int16')
+    sd.wait()  # Wait until the recording is finished
+
+    # Save the audio data to a temporary WAV file
+    temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix='.wav')
+    wavfile.write(temp_wav.name, samplerate, audio_data)
+
+    # Use the SpeechRecognition library to recognize the speech
     r = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.write("Say something!")
-        audio = r.listen(source)
+    with sr.AudioFile(temp_wav.name) as source:
+        audio = r.record(source)  # Read the entire audio file
         try:
             text = r.recognize_google(audio)
             st.write("You said: " + text)
@@ -31,6 +47,9 @@ def recognize_speech():
             st.write("Google Speech Recognition could not understand audio")
         except sr.RequestError as e:
             st.write("Could not request results from Google Speech Recognition service; {0}".format(e))
+    
+    # Clean up the temporary WAV file
+    os.remove(temp_wav.name)
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
@@ -40,11 +59,9 @@ st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
 
 # Version number
-st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.2 beta</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.1 beta</h3>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 10px;'>(This is still under beta so it may contain some issues)</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 10px;'>(Pls report any bugs at the email provided at bottom)</p>", unsafe_allow_html=True)
-
-
 
 # Initialize chat history in session state
 if 'chat_history' not in st.session_state:

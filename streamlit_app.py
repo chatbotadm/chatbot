@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 import streamlit as st
 import google.generativeai as genai
-import speech_recognition as sr
 
 # Load environment variables
 load_dotenv()
@@ -18,23 +17,6 @@ def get_gemini_response(question):
     response = chat.send_message(question, stream=True)
     return response
 
-# Function to recognize speech from microphone
-def recognize_speech():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.write("Speak now...")
-        audio = r.listen(source)
-
-    try:
-        st.write("Processing...")
-        query = r.recognize_google(audio)
-        st.text_input("You said:", query)
-        return query
-    except sr.UnknownValueError:
-        st.error("Sorry, I could not understand what you said.")
-    except sr.RequestError as e:
-        st.error(f"Could not request results from Google Speech Recognition service; {e}")
-
 # Set page title and favicon
 favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
 st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
@@ -49,16 +31,22 @@ st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.1 beta</h3>",
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
-# Button to activate speech recognition
-if st.button("Speak"):
-    query = recognize_speech()
-    if query:
-        response = get_gemini_response(query)
-        st.session_state['chat_history'].append(("You", query))
-        st.subheader("The Response is")
-        for chunk in response:
-            st.write(chunk.text)
-            st.session_state['chat_history'].append(("Bot", chunk.text))
+# Bold input label
+st.markdown("**Input:**")
+input = st.text_input("", key="input")  # Empty label since we are using markdown for label
+submit = st.button("Ask the question")
+
+# Add note below the input box
+st.markdown("This site uses Gemini 1.0")
+
+# Handle user input and get response
+if submit and input:
+    response = get_gemini_response(input)
+    st.session_state['chat_history'].append(("You", input))
+    st.subheader("The Response is")
+    for chunk in response:
+        st.write(chunk.text)
+        st.session_state['chat_history'].append(("Bot", chunk.text))
 
 # Add your picture and description
 st.markdown("<hr>", unsafe_allow_html=True)

@@ -119,7 +119,9 @@ if page == "Chatbot":
     ask_question = st.button("Ask the question")
     generate_image = st.button("Generate Image")
 
-    st.markdown("This site uses Gemini 1.5")
+     st.markdown("<p style='font-size: 10px; text-align: center;'>Image generation can take up to 15 mins depending on your system.</p>", unsafe_allow_html=True)
+     st.markdown("This site uses Gemini 1.5")
+    
 
     if ask_question and user_input:
         try:

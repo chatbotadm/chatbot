@@ -5,8 +5,6 @@ import streamlit as st
 import google.generativeai as genai
 import torch
 from PIL import Image
-
-# Import the "What's New?" page, Privacy Policy page, and Terms of Use page
 import whats_new
 import terms_of_use
 import privacy_policy
@@ -18,7 +16,7 @@ if os.path.exists(favicon_path):
 else:
     st.set_page_config(page_title="CHATBOT.ai")
 
-# Load custom CSS
+# CSS
 def load_css(file_name):
     with open(file_name, 'r') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -44,13 +42,14 @@ def get_gemini_response(question):
 def load_model():
     from diffusers import StableDiffusionPipeline
     try:
-        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", low_cpu_mem_usage=True)
+        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         if torch.cuda.is_available():
             model = model.to("cuda")
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
+
 # Display the logo
 logo_path = "final logo.png" 
 if os.path.exists(logo_path):
@@ -76,7 +75,7 @@ if 'selected_nav_item' not in st.session_state:
 
 nav_items = {
     "Chatbot": "Chatbot",
-    "What's New?": "What's New ?",
+    "What's New?": "What's New?",
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use"
 }
@@ -100,11 +99,17 @@ st.markdown(
             border-radius: 5px;
             color: white;
         }}
+        /* Add hamburger icon */
+        .sidebar .sidebar-content .sidebar-collapse {{
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            text-align: right;
+        }}
     </style>
     """, 
     unsafe_allow_html=True
-)
-
+)  
 page = st.session_state.selected_nav_item
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
@@ -118,20 +123,27 @@ if page == "Chatbot":
     user_input = st.text_input("", key="input")
     ask_question = st.button("Ask the question")
     generate_image = st.button("Generate Image")
-
     st.markdown("<p style='text-align: left; font-size: 10px;'>(Image generation can take up to 15 mins depending on your system)</p>", unsafe_allow_html=True)
 
     st.markdown("This site uses Gemini 1.5")
-    
 
     if ask_question and user_input:
         try:
             response = get_gemini_response(user_input)
             st.session_state['chat_history'].append(("You", user_input))
             st.subheader("The Response is")
+
+            # Check for valid text parts in the response
+            valid_response = False
             for chunk in response:
-                st.write(chunk.text)
-                st.session_state['chat_history'].append(("Bot", chunk.text))
+                if hasattr(chunk, 'text'):
+                    st.write(chunk.text)
+                    st.session_state['chat_history'].append(("Bot", chunk.text))
+                    valid_response = True
+
+            if not valid_response:
+                st.warning("The response was blocked due to safety filters. Please try asking a different question.")
+
         except Exception as e:
             st.error(f"Error getting chatbot response: {e}")
 

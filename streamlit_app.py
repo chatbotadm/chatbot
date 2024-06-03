@@ -76,7 +76,7 @@ if 'selected_nav_item' not in st.session_state:
 
 nav_items = {
     "Chatbot": "Chatbot",
-    "What's New?": "What's New?",
+    "What's New?": "What's New ?",
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use"
 }

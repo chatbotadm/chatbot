@@ -3,3 +3,8 @@ google-generativeai
 python-dotenv
 Flask
 Werkzeug
+torch
+diffusers
+Pillow
+transformers
+

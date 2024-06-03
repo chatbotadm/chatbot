@@ -3,7 +3,6 @@ import base64
 from dotenv import load_dotenv
 import streamlit as st
 import google.generativeai as genai
-from diffusers import StableDiffusionPipeline
 import torch
 from PIL import Image
 
@@ -12,9 +11,8 @@ import whats_new
 import terms_of_use
 import privacy_policy
 
-
 # Set page title and favicon
-favicon_path = "./favicon.ico"  # Assuming favicon.ico is in the same directory
+favicon_path = "./favicon.ico"
 if os.path.exists(favicon_path):
     st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
 else:
@@ -41,9 +39,10 @@ def get_gemini_response(question):
     response = chat.send_message(question, stream=True)
     return response
 
-# Load the Stable Diffusion model
+# Lazy loading for Stable Diffusion model
 @st.cache_resource
 def load_model():
+    from diffusers import StableDiffusionPipeline
     try:
         model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         if torch.cuda.is_available():
@@ -52,8 +51,6 @@ def load_model():
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
-
-sd_model = load_model()
 
 # Display the logo
 logo_path = "final logo.png" 
@@ -85,12 +82,10 @@ nav_items = {
     "Terms of Use": "Terms of Use"
 }
 
-# Generate sidebar buttons
 for nav_item, display_name in nav_items.items():
     if st.sidebar.button(display_name, key=nav_item):
         set_nav_item(nav_item)
 
-# Highlight the selected item in the sidebar
 st.markdown(
     f"""
     <style>
@@ -100,7 +95,6 @@ st.markdown(
             cursor: pointer;
             transition: all 0.3s;
         }}
-
         .sidebar .sidebar-content .nav-item:hover,
         .sidebar .sidebar-content .nav-item.selected {{
             background-color: #444;
@@ -112,30 +106,22 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Display the selected page
 page = st.session_state.selected_nav_item
 if page == "Chatbot":
-    # Streamlit app title
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-
-    # Version number and note
     st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.2 beta</h3>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size: 10px;'>Note: This is a beta version and may contain bugs.</p>", unsafe_allow_html=True)
 
-    # Initialize chat history in session state
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []
 
-    # Bold input label
     st.markdown("**Input:**")
-    user_input = st.text_input("", key="input")  # Renamed `input` to `user_input` to avoid conflict with built-in name
+    user_input = st.text_input("", key="input")
     ask_question = st.button("Ask the question")
     generate_image = st.button("Generate Image")
 
-    # Add note below the input box
     st.markdown("This site uses Gemini 1.5")
 
-    # Handle user input and get response for chatbot
     if ask_question and user_input:
         try:
             response = get_gemini_response(user_input)
@@ -143,85 +129,4 @@ if page == "Chatbot":
             st.subheader("The Response is")
             for chunk in response:
                 st.write(chunk.text)
-                st.session_state['chat_history'].append(("Bot", chunk.text))
-        except Exception as e:
-            st.error(f"Error getting chatbot response: {e}")
-
-    # Handle image generation
-    if generate_image and user_input:
-        if sd_model:
-            progress_bar = st.progress(0)  # Initialize progress bar
-            with st.spinner("Generating Image..."):  # Display a spinner while image is being generated
-                try:
-                    # Generate image
-                    with torch.no_grad():
-                        image = sd_model(user_input).images[0]
-
-                    # Update progress bar
-                    progress_bar.progress(50)  # 50% completion
-
-                    # Display image
-                    st.image(image, caption="Here is your image", use_column_width=True)
-
-                    # Update progress bar
-                    progress_bar.progress(100)  # 100% completion
-                except Exception as e:
-                    st.error(f"Error generating image: {e}")
-        else:
-            st.error("Stable Diffusion model not loaded.")
-
-    # Add your picture and description
-    st.markdown("<hr>", unsafe_allow_html=True)
-    if os.path.exists("dmm.jpg"):
-        st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (Creator of Chatbot.AI)", use_column_width=True)
-    else:
-        st.error("Developer image not found.")
-
-    st.markdown(
-        """
-        <div style='text-align: center;'>
-            <h2>About Me: Divyansh Mittal, Creator of Chatbot.AI</h2>
-            <p>Hey there! I'm Divyansh Mittal, the brain behind Chatbot.ai. At just 13 years old, I'm passionate about artificial intelligence and programming. Chatbot.ai is my brainchild, born out of my fascination with how technology can shape our future.</p>
-            <p>With Chatbot.ai, I'm on a mission to revolutionize the way we interact with AI. My goal is to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Add a black section for support email
-    st.markdown(
-        """
-        <style>
-        .support-section {
-            background-color: black;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .support-section a {
-            color: white;
-            text-decoration: none;
-        }
-        .support-section a:hover {
-            text-decoration: underline;
-        }
-        </style>
-        <div class="support-section">
-            <h4>Support</h4>
-            <p>If you have any questions or need support, please contact us at:</p>
-            <p><a href="mailto:chatbot.aidm@gmail.com">chatbot.aidm@gmail.com</a></p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-elif page == "What's New?":
-    whats_new.app()
-
-elif page == "Privacy Policy":
-    privacy_policy.app()  # Display the privacy policy page
-
-elif page == "Terms of Use":
-    terms_of_use.app()
-# Add any other pages here
+                st.session_state['chat_history'].append(("Bot", chunk.text

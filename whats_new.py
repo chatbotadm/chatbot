@@ -7,7 +7,7 @@ def app():
         ## Version 1.0.2 beta (Updated on June 3,2024) 
         - Added Stable Diffusion image generation.
         - Initial release with core functionalities.
-        - Integrated with Gemini AI for chat responses.
+        - Integrated Gemini 1.5 for better chat responses.
         - Enhanced UI for better user experience.
         
         ## Version 1.0.1 (Updated on May 31,2024) 

@@ -44,14 +44,13 @@ def get_gemini_response(question):
 def load_model():
     from diffusers import StableDiffusionPipeline
     try:
-        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", low_cpu_mem_usage=True)
         if torch.cuda.is_available():
             model = model.to("cuda")
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
-
 # Display the logo
 logo_path = "final logo.png" 
 if os.path.exists(logo_path):

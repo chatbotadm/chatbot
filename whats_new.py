@@ -13,10 +13,10 @@ def app():
         ## Version 1.0.1 (Updated on May 31,2024) 
         - Bug fixes and performance improvements.
 
-        ## Version 1.0.0 ( released on May 29 ,2024) 
+        ## Version 1.0.0 (Released on May 29,2024) 
         - Initial release of Chatbot.ai
         
-        ## Upcoming Features
+        ## Upcoming Features - 
         - Live speech-to-text transcription
         - Additional customization options for generated images.
         - Ability to read PDF,video to give a summary

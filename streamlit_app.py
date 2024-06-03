@@ -23,6 +23,46 @@ def load_css(file_name):
 
 load_css('styles.css')
 
+# Custom CSS for code blocks
+st.markdown("""
+    <style>
+    .code-block {
+        background-color: #2E2E2E;
+        color: white;
+        border-radius: 10px;
+        padding: 10px;
+        position: relative;
+    }
+    .copy-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    .copy-button:hover {
+        background-color: #45a049;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# JavaScript for copy functionality
+st.markdown("""
+    <script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            console.log('Copied to clipboard successfully!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    }
+    </script>
+""", unsafe_allow_html=True)
+
 # Load environment variables
 load_dotenv()
 
@@ -135,14 +175,30 @@ if page == "Chatbot":
 
             # Check for valid text parts in the response
             valid_response = False
+            code_response = False
             for chunk in response:
                 if hasattr(chunk, 'text'):
-                    st.write(chunk.text)
+                    if "```" in chunk.text:
+                        code_response = True
+                        code = chunk.text.split("```")[1]  # Extract code from markdown block
+                        st.markdown(
+                            f"""
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(`{code}`)">Copy</button>
+                                <pre>{code}</pre>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+                    else:
+                        st.write(chunk.text)
                     st.session_state['chat_history'].append(("Bot", chunk.text))
                     valid_response = True
 
             if not valid_response:
                 st.warning("The response was blocked due to safety filters. Please try asking a different question.")
+            if not code_response and valid_response:
+                st.warning("No code detected in the response. Please try asking for code again.")
 
         except Exception as e:
             st.error(f"Error getting chatbot response: {e}")

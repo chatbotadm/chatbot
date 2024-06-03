@@ -9,7 +9,7 @@ def app():
 
     ## Introduction
 
-    Welcome to Chatbot.ai. By using our website and services, you agree to comply with and be bound by these terms of use ("Terms"). Please review the following terms carefully.
+    Welcome to Chatbot.ai. By using our website and services, you agree to comply with and be bound by these terms of use. Please review the following terms carefully.
 
     ## Use of the Site
 

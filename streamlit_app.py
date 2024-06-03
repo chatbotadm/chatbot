@@ -5,6 +5,8 @@ import streamlit as st
 import google.generativeai as genai
 import torch
 from PIL import Image
+
+# Import the "What's New?" page, Privacy Policy page, and Terms of Use page
 import whats_new
 import terms_of_use
 import privacy_policy
@@ -16,52 +18,12 @@ if os.path.exists(favicon_path):
 else:
     st.set_page_config(page_title="CHATBOT.ai")
 
-# CSS
+# Load custom CSS
 def load_css(file_name):
     with open(file_name, 'r') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 load_css('styles.css')
-
-# Custom CSS for code blocks
-st.markdown("""
-    <style>
-    .code-block {
-        background-color: #2E2E2E;
-        color: white;
-        border-radius: 10px;
-        padding: 10px;
-        position: relative;
-    }
-    .copy-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
-    }
-    .copy-button:hover {
-        background-color: #45a049;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# JavaScript for copy functionality
-st.markdown("""
-    <script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            console.log('Copied to clipboard successfully!');
-        }, function(err) {
-            console.error('Could not copy text: ', err);
-        });
-    }
-    </script>
-""", unsafe_allow_html=True)
 
 # Load environment variables
 load_dotenv()
@@ -82,14 +44,13 @@ def get_gemini_response(question):
 def load_model():
     from diffusers import StableDiffusionPipeline
     try:
-        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        model = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", low_cpu_mem_usage=True)
         if torch.cuda.is_available():
             model = model.to("cuda")
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
-
 # Display the logo
 logo_path = "final logo.png" 
 if os.path.exists(logo_path):
@@ -115,7 +76,7 @@ if 'selected_nav_item' not in st.session_state:
 
 nav_items = {
     "Chatbot": "Chatbot",
-    "What's New?": "What's New?",
+    "What's New?": "What's New ?",
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use"
 }
@@ -139,17 +100,11 @@ st.markdown(
             border-radius: 5px;
             color: white;
         }}
-        /* Add hamburger icon */
-        .sidebar .sidebar-content .sidebar-collapse {{
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            text-align: right;
-        }}
     </style>
     """, 
     unsafe_allow_html=True
-)  
+)
+
 page = st.session_state.selected_nav_item
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
@@ -163,43 +118,20 @@ if page == "Chatbot":
     user_input = st.text_input("", key="input")
     ask_question = st.button("Ask the question")
     generate_image = st.button("Generate Image")
+
     st.markdown("<p style='text-align: left; font-size: 10px;'>(Image generation can take up to 15 mins depending on your system)</p>", unsafe_allow_html=True)
 
     st.markdown("This site uses Gemini 1.5")
+    
 
     if ask_question and user_input:
         try:
             response = get_gemini_response(user_input)
             st.session_state['chat_history'].append(("You", user_input))
             st.subheader("The Response is")
-
-            # Check for valid text parts in the response
-            valid_response = False
-            code_response = False
             for chunk in response:
-                if hasattr(chunk, 'text'):
-                    if "```" in chunk.text:
-                        code_response = True
-                        code = chunk.text.split("```")[1]  # Extract code from markdown block
-                        st.markdown(
-                            f"""
-                            <div class="code-block">
-                                <button class="copy-button" onclick="copyToClipboard(`{code}`)">Copy</button>
-                                <pre>{code}</pre>
-                            </div>
-                            """,
-                            unsafe_allow_html=True
-                        )
-                    else:
-                        st.write(chunk.text)
-                    st.session_state['chat_history'].append(("Bot", chunk.text))
-                    valid_response = True
-
-            if not valid_response:
-                st.warning("The response was blocked due to safety filters. Please try asking a different question.")
-            if not code_response and valid_response:
-                st.warning("No code detected in the response. Please try asking for code again.")
-
+                st.write(chunk.text)
+                st.session_state['chat_history'].append(("Bot", chunk.text))
         except Exception as e:
             st.error(f"Error getting chatbot response: {e}")
 

@@ -129,4 +129,75 @@ if page == "Chatbot":
             st.subheader("The Response is")
             for chunk in response:
                 st.write(chunk.text)
-                st.session_state['chat_history'].append(("Bot", chunk.text
+                st.session_state['chat_history'].append(("Bot", chunk.text))
+        except Exception as e:
+            st.error(f"Error getting chatbot response: {e}")
+
+    if generate_image and user_input:
+        sd_model = load_model()
+        if sd_model:
+            progress_bar = st.progress(0)
+            with st.spinner("Generating Image..."):
+                try:
+                    with torch.no_grad():
+                        image = sd_model(user_input).images[0]
+                    progress_bar.progress(50)
+                    st.image(image, caption="Here is your image", use_column_width=True)
+                    progress_bar.progress(100)
+                except Exception as e:
+                    st.error(f"Error generating image: {e}")
+        else:
+            st.error("Stable Diffusion model not loaded.")
+
+    st.markdown("<hr>", unsafe_allow_html=True)
+    if os.path.exists("dmm.jpg"):
+        st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (Creator of Chatbot.AI)", use_column_width=True)
+    else:
+        st.error("Developer image not found.")
+
+    st.markdown(
+        """
+        <div style='text-align: center;'>
+            <h2>About Me: Divyansh Mittal, Creator of Chatbot.AI</h2>
+            <p>Hey there! I'm Divyansh Mittal, the brain behind Chatbot.ai. At just 13 years old, I'm passionate about artificial intelligence and programming. Chatbot.ai is my brainchild, born out of my fascination with how technology can shape our future.</p>
+            <p>With Chatbot.ai, I'm on a mission to revolutionize the way we interact with AI. My goal is to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <style>
+        .support-section {
+            background-color: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .support-section a {
+            color: white;
+            text-decoration: none;
+        }
+        .support-section a:hover {
+            text-decoration: underline;
+        }
+        </style>
+        <div class="support-section">
+            <h4>Support</h4>
+            <p>If you have any questions or need support, please contact us at:</p>
+            <p><a href="mailto:chatbot.aidm@gmail.com">chatbot.aidm@gmail.com</a></p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+elif page == "What's New?":
+    whats_new.app()
+
+elif page == "Privacy Policy":
+    privacy_policy.app()
+
+elif page == "Terms of Use":
+    terms_of_use.app()

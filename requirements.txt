@@ -7,4 +7,4 @@ torch
 diffusers
 Pillow
 transformers
-
+accelerate

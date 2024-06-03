@@ -9,7 +9,7 @@ def app():
 
     ## Introduction
 
-    Welcome to Chatbot.ai. Your privacy is important to us. This privacy policy ("Policy") explains how we collect, use, disclose, and protect your information when you use our website and services.
+    Welcome to Chatbot.ai. Your privacy is important to us. This privacy policy explains how we collect, use, disclose, and protect your information when you use our website and services.
 
     ## Information We Collect
 

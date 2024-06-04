@@ -1,7 +1,7 @@
 import streamlit as st
 
 def app():
-    st.title("Terms of Use")
+    st.markdown("<h1 style='text-align: center;'>Terms of Use</h1>", unsafe_allow_html=True) 
 
     st.markdown("""
 

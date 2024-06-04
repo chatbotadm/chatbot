@@ -1,11 +1,13 @@
 import streamlit as st
 
 def app():
-    st.markdown("<h1 style='text-align: center;'>Terms of Use</h1>", unsafe_allow_html=True) 
+   def app():
+    st.title("Terms of Use")
 
     st.markdown("""
 
-    **Effective:** June 1,2024
+    **Effective Date:** June 1, 2024
+
 
     ## Introduction
 

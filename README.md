@@ -1,5 +1,3 @@
-### This repo is a demonstration for adding favicon to flask app.
+### This repo contains chatbot.ai created by 13yp
 
-The favicon is used on your browser's tab, and favourites when you save or bookmark the url of the webpage/webapp.
-
-Not mission critical but a nice to have feature!
+https://chatbot-c83vwmvnqp8vsgwu4dserr.streamlit.app/     pls visit

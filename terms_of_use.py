@@ -5,7 +5,7 @@ def app():
 
     st.markdown("""
 
-    **Effective: June 1,2024
+    **Effective:** June 1,2024
 
     ## Introduction
 

@@ -5,8 +5,6 @@ import streamlit as st
 import google.generativeai as genai
 import torch
 from PIL import Image
-
-# Import the "What's New?" page, Privacy Policy page, and Terms of Use page
 import whats_new
 import terms_of_use
 import privacy_policy

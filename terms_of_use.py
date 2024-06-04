@@ -5,7 +5,7 @@ def app():
 
     st.markdown("""
 
-    st.markdown("<h1 style='text-align: center;'>Effective from June 1,2024</h1>", unsafe_allow_html=True)
+    ("<h1 style='text-align: center;'>Effective from June 1,2024</h1>", unsafe_allow_html=True)
 
     ## Introduction
 

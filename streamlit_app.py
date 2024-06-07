@@ -49,6 +49,7 @@ def load_model():
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
+
 # Display the logo
 logo_path = "final logo.png" 
 if os.path.exists(logo_path):
@@ -74,39 +75,52 @@ if 'selected_nav_item' not in st.session_state:
 
 nav_items = {
     "Chatbot": "Chatbot",
-    "What's New?": "What's New ?",
+    "What's New?": "What's New?",
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use"
 }
 
+icons = {
+    "Chatbot": "💬",
+    "What's New?": "📰",
+    "Privacy Policy": "🛡️",
+    "Terms of Use": "📄"
+}
+
 for nav_item, display_name in nav_items.items():
-    if st.sidebar.button(display_name, key=nav_item):
+    if st.sidebar.button(f"{icons[nav_item]} {display_name}", key=nav_item):
         set_nav_item(nav_item)
 
+# Custom CSS for sidebar buttons
 st.markdown(
-    f"""
+    """
     <style>
-        .sidebar .sidebar-content .nav-item {{
+        .sidebar .sidebar-content .stButton button {
+            width: 100%;
+            text-align: left;
             padding: 10px 20px;
             color: white;
+            background-color: transparent;
+            border: none;
             cursor: pointer;
             transition: all 0.3s;
-        }}
-        .sidebar .sidebar-content .nav-item:hover,
-        .sidebar .sidebar-content .nav-item.selected {{
+        }
+        .sidebar .sidebar-content .stButton button:hover,
+        .sidebar .sidebar-content .stButton button:focus {
             background-color: #444;
             border-radius: 5px;
             color: white;
-        }}
+        }
     </style>
-    """, 
+    """,
     unsafe_allow_html=True
 )
 
 page = st.session_state.selected_nav_item
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.2</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.3 beta</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 10px;'>Note: This is a beta version and may contain bugs.</p>", unsafe_allow_html=True)
 
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []

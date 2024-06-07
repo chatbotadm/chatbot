@@ -21,6 +21,7 @@ def app():
         - Additional customization options for generated images.
         - Ability to read PDF,video to give a summary
         - More robust error handling 
+        - UI enhancements
         - Security patches
         """
     )

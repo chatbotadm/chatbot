@@ -4,9 +4,13 @@ def app():
     st.title("What's New ?")
     st.markdown(
         """
+        ## Version 1.0.4 beta (Updated on June 10,2024)
+        - Added background in sidebar menu.
+        - Auto-closing sidebar menu.
+        
         ## Version 1.0.3 beta (Updated on June 7,2024)
         - Added icons in sidebar menu.
-        - Fixed bugs 
+        - Fixed bugs.
         
         ## Version 1.0.2 (Updated on June 3,2024)
         - Added Stable Diffusion image generation.

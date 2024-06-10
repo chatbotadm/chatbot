@@ -27,10 +27,11 @@ def app():
         ## Upcoming Features
         - Live speech-to-text transcription
         - UI Enhancements
-        - Additional customization options for generated images.
+        - Security patches
+        - Additional customization options for generated images
         - Ability to read PDF,video to give a summary
         - More robust error handling 
-        - Security patches
+        
         
         """
     )

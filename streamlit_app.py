@@ -234,4 +234,3 @@ elif page == "Privacy Policy":
 
 elif page == "Terms of Use":
     terms_of_use.app()
-s

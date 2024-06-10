@@ -64,6 +64,25 @@ if os.path.exists(logo_path):
 else:
     st.warning(f"Logo not found at path: {logo_path}")
 
+# Add background image to sidebar
+def sidebar_bg(bg_image):
+    with open(bg_image, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+            [data-testid="stSidebar"] > div:first-child {{
+                background: url(data:image/png;base64,{encoded_string});
+                background-size: cover;
+                background-position: center;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+sidebar_bg('bg.png')
+
 # Sidebar navigation
 st.sidebar.title("Welcome to Chatbot.ai")
 
@@ -90,7 +109,8 @@ icons = {
 for nav_item, display_name in nav_items.items():
     if st.sidebar.button(f"{icons[nav_item]} {display_name}", key=nav_item):
         set_nav_item(nav_item)
-
+        st.experimental_rerun()
+        st.sidebar.clear()  
 # Custom CSS for sidebar buttons
 st.markdown(
     """
@@ -116,10 +136,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-page = st.session_state.selected_nav_item
+page = st.session_state.get('selected_nav_item', "Chatbot")
+
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.3</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.4 beta</h3>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size: 10px;'>Note: This is a beta version and may contain bugs.</p>", unsafe_allow_html=True)
 
     if 'chat_history' not in st.session_state:
@@ -133,7 +154,6 @@ if page == "Chatbot":
     st.markdown("<p style='text-align: left; font-size: 10px;'>(Image generation can take up to 15 mins depending on your system)</p>", unsafe_allow_html=True)
 
     st.markdown("This site uses Gemini 1.5")
-    
 
     if ask_question and user_input:
         try:
@@ -214,3 +234,4 @@ elif page == "Privacy Policy":
 
 elif page == "Terms of Use":
     terms_of_use.app()
+s

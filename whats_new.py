@@ -29,7 +29,7 @@ def app():
         - UI Enhancements
         - Security patches
         - Additional customization options for generated images
-        - Ability to read PDF,video to give a summary
+        - Ability to summarize PDF and Videos
         - More robust error handling 
         
         

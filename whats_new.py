@@ -25,10 +25,10 @@ def app():
         - Initial release of Chatbot.ai
         
         ## Upcoming Features
+        - Chat History
         - Live speech-to-text transcription
         - UI Enhancements
         - Security patches
-        - Chat History
         - Cookies
         - Additional customization options for generated images
         - Ability to summarize PDF and Videos

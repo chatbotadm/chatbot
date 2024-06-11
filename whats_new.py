@@ -28,6 +28,8 @@ def app():
         - Live speech-to-text transcription
         - UI Enhancements
         - Security patches
+        - Chat History
+        - Cookies
         - Additional customization options for generated images
         - Ability to summarize PDF and Videos
         - More robust error handling 

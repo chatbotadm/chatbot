@@ -1,3 +1,4 @@
+import time
 import os
 import base64
 from dotenv import load_dotenv
@@ -33,9 +34,16 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[])
 
-def get_gemini_response(question):
-    response = chat.send_message(question, stream=True)
-    return response
+def get_gemini_response(question, retries=3, delay=5):
+    for attempt in range(retries):
+        try:
+            response = chat.send_message(question, stream=True)
+            return response
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise e
 
 # Lazy loading for Stable Diffusion model
 @st.cache_resource
@@ -51,7 +59,7 @@ def load_model():
         return None
 
 # Display the logo
-logo_path = "final logo.png" 
+logo_path = "final logo.png"
 if os.path.exists(logo_path):
     st.markdown(
         f"""
@@ -96,14 +104,16 @@ nav_items = {
     "Chatbot": "Chatbot",
     "What's New?": "What's New?",
     "Privacy Policy": "Privacy Policy",
-    "Terms of Use": "Terms of Use"
+    "Terms of Use": "Terms of Use",
+    "Chat History": "Chat History"
 }
 
 icons = {
     "Chatbot": "💬",
     "What's New?": "📰",
     "Privacy Policy": "🛡️",
-    "Terms of Use": "📄"
+    "Terms of Use": "📄",
+    "Chat History": "⏳"
 }
 
 for nav_item, display_name in nav_items.items():
@@ -136,11 +146,17 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Define a function to store chat history
+def store_chat_history(message):
+    if 'chat_history' not in st.session_state:
+        st.session_state['chat_history'] = []
+    st.session_state['chat_history'].append(message)
+
 page = st.session_state.get('selected_nav_item', "Chatbot")
 
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.4</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.5 beta</h3>", unsafe_allow_html=True)
 
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []
@@ -157,11 +173,11 @@ if page == "Chatbot":
     if ask_question and user_input:
         try:
             response = get_gemini_response(user_input)
-            st.session_state['chat_history'].append(("You", user_input))
+            store_chat_history(("You", user_input))
             st.subheader("The Response is")
             for chunk in response:
                 st.write(chunk.text)
-                st.session_state['chat_history'].append(("Bot", chunk.text))
+                store_chat_history(("Bot", chunk.text))
         except Exception as e:
             st.error(f"Error getting chatbot response: {e}")
 
@@ -183,7 +199,7 @@ if page == "Chatbot":
 
     st.markdown("<hr>", unsafe_allow_html=True)
     if os.path.exists("dmm.jpg"):
-        st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (Creator of Chatbot.AI)", use_column_width=True)
+        st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (Creator of CHATBOT.ai)", use_column_width=True)
     else:
         st.error("Developer image not found.")
 
@@ -233,3 +249,15 @@ elif page == "Privacy Policy":
 
 elif page == "Terms of Use":
     terms_of_use.app()
+
+elif page == "Chat History":
+    st.markdown("<h1 style='text-align: left;'>Chat History</h1>", unsafe_allow_html=True)
+    if 'chat_history' in st.session_state and st.session_state['chat_history']:
+        for speaker, message in st.session_state['chat_history']:
+            st.markdown(f"**{speaker}:** {message}")
+        
+        if st.button("Clear Chat History"):
+            st.session_state['chat_history'] = []  
+            st.markdown("Chat history cleared! 👍")
+    else:
+        st.markdown("No chat history yet 😞.")

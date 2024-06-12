@@ -5,7 +5,7 @@ def app():
     st.title("What's New ?")
     st.markdown(
         """
-        ## Version 1.0.5 beta (Updated on June 12,2024)
+        ## Version 1.0.5 (Updated on June 12,2024)
         - Added Chat History
         - Security Patches
         
@@ -30,6 +30,7 @@ def app():
         - Initial release of Chatbot.ai
         
         ## Upcoming Features
+        - Blog
         - Login Page
         - Live speech-to-text transcription
         - UI Enhancements

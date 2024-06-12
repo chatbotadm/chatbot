@@ -30,7 +30,7 @@ def app():
         - Initial release of Chatbot.ai
         
         ## Upcoming Features
-        - Chat History
+        - Login Page
         - Live speech-to-text transcription
         - UI Enhancements
         - Security patches

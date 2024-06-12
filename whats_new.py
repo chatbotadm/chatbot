@@ -1,9 +1,14 @@
+
 import streamlit as st
 
 def app():
     st.title("What's New ?")
     st.markdown(
         """
+        ## Version 1.0.5 beta (Updated on June 12,2024)
+        - Added Chat History
+        - Security Patches
+        
         ## Version 1.0.4 (Updated on June 10,2024)
         - Added background in sidebar menu.
         - Auto-closing sidebar menu.

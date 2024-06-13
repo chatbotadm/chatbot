@@ -9,6 +9,7 @@ from PIL import Image
 import whats_new
 import terms_of_use
 import privacy_policy
+import blog_1
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"
@@ -58,20 +59,6 @@ def load_model():
         st.error(f"Error loading model: {e}")
         return None
 
-# Display the logo
-logo_path = "final logo.png"
-if os.path.exists(logo_path):
-    st.markdown(
-        f"""
-        <div style="display: flex; justify-content: center;">
-            <img src="data:image/png;base64,{base64.b64encode(open(logo_path, "rb").read()).decode()}">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-else:
-    st.warning(f"Logo not found at path: {logo_path}")
-
 # Add background image to sidebar
 def sidebar_bg(bg_image):
     with open(bg_image, "rb") as image_file:
@@ -105,7 +92,8 @@ nav_items = {
     "What's New?": "What's New?",
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use",
-    "Chat History": "Chat History"
+    "Chat History": "Chat History",
+    "Blog": "Blog"
 }
 
 icons = {
@@ -113,14 +101,16 @@ icons = {
     "What's New?": "📰",
     "Privacy Policy": "🛡️",
     "Terms of Use": "📄",
-    "Chat History": "⏳"
+    "Chat History": "⏳",
+    "Blog": "✍️"
 }
 
 for nav_item, display_name in nav_items.items():
     if st.sidebar.button(f"{icons[nav_item]} {display_name}", key=nav_item):
         set_nav_item(nav_item)
         st.experimental_rerun()
-        st.sidebar.clear()  
+        st.sidebar.clear()
+
 # Custom CSS for sidebar buttons
 st.markdown(
     """
@@ -146,17 +136,26 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Define a function to store chat history
-def store_chat_history(message):
-    if 'chat_history' not in st.session_state:
-        st.session_state['chat_history'] = []
-    st.session_state['chat_history'].append(message)
-
 page = st.session_state.get('selected_nav_item', "Chatbot")
+
+if page != "Blog":
+    # Display the logo only if the current page is not "Blog"
+    logo_path = "final logo.png"
+    if os.path.exists(logo_path):
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: center;">
+                <img src="data:image/png;base64,{base64.b64encode(open(logo_path, "rb").read()).decode()}" style="width: 150px;">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.warning(f"Logo not found at path: {logo_path}")
 
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.5</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.4</h3>", unsafe_allow_html=True)
 
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []
@@ -173,11 +172,11 @@ if page == "Chatbot":
     if ask_question and user_input:
         try:
             response = get_gemini_response(user_input)
-            store_chat_history(("You", user_input))
+            st.session_state['chat_history'].append(("You", user_input))
             st.subheader("The Response is")
             for chunk in response:
                 st.write(chunk.text)
-                store_chat_history(("Bot", chunk.text))
+                st.session_state['chat_history'].append(("Bot", chunk.text))
         except Exception as e:
             st.error(f"Error getting chatbot response: {e}")
 
@@ -249,6 +248,9 @@ elif page == "Privacy Policy":
 
 elif page == "Terms of Use":
     terms_of_use.app()
+
+elif page == "Blog":
+    blog_1.app()
 
 elif page == "Chat History":
     st.markdown("<h1 style='text-align: left;'>Chat History</h1>", unsafe_allow_html=True)

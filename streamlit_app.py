@@ -76,7 +76,7 @@ def sidebar_bg(bg_image):
         unsafe_allow_html=True
     )
 
-sidebar_bg('bg.png')
+sidebar_bg('bg1.png')
 
 # Sidebar navigation
 st.sidebar.title("Welcome to Chatbot.ai")

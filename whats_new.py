@@ -5,6 +5,10 @@ def app():
     st.title("What's New ?")
     st.markdown(
         """
+        ## Version 1.0.6 beta (Updated on June 13,2024)
+        - Added Blog
+        - Fixed Bugs
+        
         ## Version 1.0.5 (Updated on June 12,2024)
         - Added Chat History
         - Security Patches

@@ -155,7 +155,7 @@ if page != "Blog":
 
 if page == "Chatbot":
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.4</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.5 beta</h3>", unsafe_allow_html=True)
 
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []

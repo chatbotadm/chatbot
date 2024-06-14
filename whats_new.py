@@ -5,7 +5,7 @@ def app():
     st.title("What's New ?")
     st.markdown(
         """
-        ## Version 1.0.6 beta (Updated on June 13,2024)
+        ## Version 1.0.6 (Updated on June 13,2024)
         - Added Blog
         - Fixed Bugs
         

@@ -1,18 +1,30 @@
 /* styles.css */
-.sidebar .sidebar-content {
-  background-color: #222;
+
+body {
+  font-family: 'Open Sans', sans-serif;  /* Specify your desired font family */
 }
 
-.sidebar .sidebar-content .nav-item {
+.sidebar .sidebar-content {
+  background-color: #222;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.sidebar .sidebar-content .stButton button {
+  width: 100%;
+  text-align: left;
   padding: 10px 20px;
   color: white;
+  background-color: transparent;
+  border: none;
   cursor: pointer;
   transition: all 0.3s;
 }
 
-.sidebar .sidebar-content .nav-item:hover,
-.sidebar .sidebar-content .nav-item.selected {
-  background-color: #444;
+.sidebar .sidebar-content .stButton button:hover,
+.sidebar .sidebar-content .stButton button.selected {
+  background-color: #ff4d4d;
   border-radius: 5px;
   color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }

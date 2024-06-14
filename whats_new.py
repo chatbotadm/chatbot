@@ -5,6 +5,10 @@ def app():
     st.title("What's New ?")
     st.markdown(
         """
+        
+        ## Version 1.0.7 (Updated on June 14,2024)
+        - UI enhancements
+        
         ## Version 1.0.6 (Updated on June 13,2024)
         - Added Blog
         - Fixed Bugs

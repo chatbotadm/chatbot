@@ -39,11 +39,9 @@ def app():
         
         ## Upcoming Features
         - Integration of Stability Diffusion 3 for fast and better image generation 
-        - Blog
         - Login Page
         - Live speech-to-text transcription
         - UI Enhancements
-        - Security patches
         - Cookies
         - Additional customization options for generated images
         - Ability to summarize PDF and Videos

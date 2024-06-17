@@ -45,7 +45,7 @@ def app():
     If you have any questions about these Terms, please contact us at:
     **Email:** [chatbot.aidm@gmail.com](mailto:chatbot.aidm@gmail.com)
 
-    Thank you for using Chatbot.ai.
+    ## Thank you for using Chatbot.ai
     """)
     
 if __name__ == "__main__":

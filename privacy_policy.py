@@ -29,7 +29,7 @@ def app():
 
     ## How We Share Your Information
 
-    We do not share your personal information with third parties except in the following circumstances:
+    **We do not share your personal information with third parties** except in the following circumstances:
 
     1. **With your consent:** We may share your information with third parties if you have given us your consent to do so.
     2. **For legal reasons:** We may disclose your information if we believe it is necessary to comply with a legal obligation or protect our rights.

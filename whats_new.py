@@ -38,6 +38,7 @@ def app():
         - Initial release of Chatbot.ai
         
         ## Upcoming Features
+        - Push Notifications 
         - Integration of Stability Diffusion 3 for fast and better image generation 
         - Login Page
         - Live speech-to-text transcription

@@ -6,6 +6,9 @@ def app():
     st.markdown(
         """
         
+        ## Version 1.0.8 (Updated on June 21,2024)
+        - Security Patches
+        
         ## Version 1.0.7 (Updated on June 14,2024)
         - UI enhancements
         

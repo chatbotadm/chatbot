@@ -45,7 +45,7 @@ def app():
     - **Testing and Improving**: After building the initial version, I tested it extensively. I gathered feedback from friends and family, which helped me identify areas for improvement.
 
     ### Challenges Faced
-    One of the biggest challenge, I faced was ensuring that the chatbot could understand and respond accurately to a wide range of queries. This required a lot of fine-tuning and training the model with diverse datasets. Another challenge was optimizing the chatbot's performance to ensure it could handle multiple users simultaneously.
+    One of the biggest challenge I faced was ensuring that the chatbot could understand and respond accurately to a wide range of queries. This required a lot of fine-tuning and training the model with diverse datasets. Another challenge was optimizing the chatbot's performance to ensure it could handle multiple users simultaneously.
 
     ### Launching Chatbot.ai
     After months of hard work, Chatbot.ai was finally ready for launch. I created a simple website where users could interact with the bot. The response has been overwhelmingly positive, and it's exciting to see people using something I created.

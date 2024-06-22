@@ -59,6 +59,7 @@ def load_model():
         st.error(f"Error loading model: {e}")
         return None
 
+# Remove Streamlit menu etc. 
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}

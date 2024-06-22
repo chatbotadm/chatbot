@@ -59,6 +59,15 @@ def load_model():
         st.error(f"Error loading model: {e}")
         return None
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # Add background image to sidebar
 def sidebar_bg(bg_image):
     with open(bg_image, "rb") as image_file:

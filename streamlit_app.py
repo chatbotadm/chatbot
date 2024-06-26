@@ -270,7 +270,7 @@ elif page == "Terms of Use":
     terms_of_use.app()
 
 elif page == "Chat History":
-    st.title("Coming Soon !")
+    st.title("Coming very Soon !")
 
 elif page == "Blog":
     blog_1.app()

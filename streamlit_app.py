@@ -255,7 +255,7 @@ if page == "Chatbot":
                 for letter in response:
                     full_response += letter
                     placeholder.markdown(full_response)
-                    time.sleep(0.3)  # Adjust the speed of typing simulation
+                    time.sleep(0.1)  # Adjust the speed of typing simulation
                 st.session_state.messages.append({"role": "assistant", "content": response})
             except Exception as e:
                 st.error(f"Error getting response: {e}")

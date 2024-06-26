@@ -29,15 +29,6 @@ load_css('styles.css')
 # Load environment variables
 load_dotenv()
 
-SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
-
-# Load credentials from the environment
-credentials, project = google.auth.default(scopes=SCOPES)
-
-# Refresh the credentials if they are expired
-auth_req = google.auth.transport.requests.Request()
-credentials.refresh(auth_req)
-
 # Configure the API
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")

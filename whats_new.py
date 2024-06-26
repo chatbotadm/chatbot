@@ -11,10 +11,10 @@ def app():
         - Feedback Form
         - Improved Error Handling
         - Fixed INSUFFECIENT_AUTH_TOKEN
-        - Fixed Bugs
+        - 🕷️Fixed Bugs
         
         ## Version 1.0.9 (Updated on June 25,2024) 
-        - Fixed Bugs
+        - 🪰Fixed Bugs
         
         ## Version 1.0.8 (Updated on June 21,2024)
         - Security Patch
@@ -24,7 +24,7 @@ def app():
         
         ## Version 1.0.6 (Updated on June 13,2024)
         - Added Blog
-        - Fixed Bugs
+        - 🪳Fixed Bugs
         
         ## Version 1.0.5 (Updated on June 12,2024)
         - Added Chat History
@@ -36,7 +36,7 @@ def app():
         
         ## Version 1.0.3 (Updated on June 7,2024)
         - Added icons in sidebar menu.
-        - Fixed bugs.
+        - 🦗Fixed bugs.
         
         ## Version 1.0.2 (Updated on June 3,2024)
         - Added Stable Diffusion image generation.

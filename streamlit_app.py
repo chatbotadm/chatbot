@@ -10,13 +10,14 @@ import whats_new
 import terms_of_use
 import privacy_policy
 import blog_1
+import about_us
+import support
+import logging
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"
 if os.path.exists(favicon_path):
     st.set_page_config(page_title="CHATBOT.ai", page_icon=favicon_path)
-else:
-    st.set_page_config(page_title="CHATBOT.ai")
 
 # Load custom CSS
 def load_css(file_name):
@@ -30,21 +31,53 @@ load_dotenv()
 
 # Configure the API
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel("gemini-pro")
+client = model.start_chat(history=[])
 
 # Initialize the chat model
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[])
 
-def get_gemini_response(question, retries=3, delay=5):
+def get_gemini_response(question, retries=2, delay=2):
     for attempt in range(retries):
         try:
-            response = chat.send_message(question, stream=True)
-            return response
+            logging.debug(f"Attempt {attempt+1} to get response for question: {question}")
+            response = chat.send_message(question, stream=False)  # Stream is set to False for a faster response
+            logging.debug("Waiting for the response to resolve...")
+            
+            # Ensure the response is fully processed
+            response.resolve()
+            logging.debug(f"Response resolved: {response}")
+            
+            # Inspect the response object
+            logging.debug(f"Response attributes: {dir(response)}")
+            
+            # Check for the candidates attribute
+            if hasattr(response, 'candidates'):
+                # Extract the text content correctly
+                candidate = response.candidates[0]
+                if hasattr(candidate, 'content') and hasattr(candidate.content, 'parts'):
+                    text_content = candidate.content.parts[0].text
+                    logging.debug(f"Extracted text content: {text_content}")
+                    
+                    # Custom logic to respond with your name
+                    if "who made you" in question.lower() or "who created you" in question.lower() or "who developed you" in question.lower() or "who created chatbot.ai" in question.lower() or "who is your creator" in question.lower():
+                        return "I am created by Divyansh Mittal. He is a 13 year old boy who is the person behind my existence."
+                    else:
+                        return text_content
+                else:
+                    logging.error("Content parts not found in the response candidate.")
+                    return "Sorry, I didn't get that. Can you please repeat?"
+            else:
+                logging.error("No candidates attribute found in the response.")
+                return "Sorry, I didn't get that. Can you please repeat."
+                
         except Exception as e:
+            logging.error(f"Error getting response: {e}")
             if attempt < retries - 1:
                 time.sleep(delay)
             else:
-                raise e
+                return f"An error occurred: {e}"
 
 # Lazy loading for Stable Diffusion model
 @st.cache_resource
@@ -103,7 +136,9 @@ nav_items = {
     "Privacy Policy": "Privacy Policy",
     "Terms of Use": "Terms of Use",
     "Chat History": "Chat History",
-    "Blog": "Blog"
+    "Blog": "Blog",
+    "Get in Touch": "Get in Touch",
+    "About Us": "About Us"
 }
 
 icons = {
@@ -112,7 +147,9 @@ icons = {
     "Privacy Policy": "🛡️",
     "Terms of Use": "📄",
     "Chat History": "⏳",
-    "Blog": "✍️"
+    "Blog": "✍️",
+    "Get in Touch": "☎️",
+    "About Us": "👤"
 }
 
 for nav_item, display_name in nav_items.items():
@@ -164,91 +201,66 @@ if page != "Blog":
         st.warning(f"Logo not found at path: {logo_path}")
 
 if page == "Chatbot":
+
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.0.9</h3>", unsafe_allow_html=True)
-
-    if 'chat_history' not in st.session_state:
-        st.session_state['chat_history'] = []
-
-    st.markdown("**Input:**")
-    user_input = st.text_input("", key="input")
-    ask_question = st.button("Ask the question")
-    generate_image = st.button("Generate Image")
-
-    st.markdown("<p style='text-align: left; font-size: 10px;'>(Image generation can take up to 15 mins depending on your system)</p>", unsafe_allow_html=True)
-
-    st.markdown("This site uses Gemini 1.5")
-
-    if ask_question and user_input:
-        try:
-            response = get_gemini_response(user_input)
-            st.session_state['chat_history'].append(("You", user_input))
-            st.subheader("The Response is")
-            for chunk in response:
-                st.write(chunk.text)
-                st.session_state['chat_history'].append(("Bot", chunk.text))
-        except Exception as e:
-            st.error(f"Error getting chatbot response: {e}")
-
-    if generate_image and user_input:
-        sd_model = load_model()
-        if sd_model:
-            progress_bar = st.progress(0)
-            with st.spinner("Generating Image..."):
-                try:
-                    with torch.no_grad():
-                        image = sd_model(user_input).images[0]
-                    progress_bar.progress(50)
-                    st.image(image, caption="Here is your image", use_column_width=True)
-                    progress_bar.progress(100)
-                except Exception as e:
-                    st.error(f"Error generating image: {e}")
-        else:
-            st.error("Stable Diffusion model not loaded.")
-
-    st.markdown("<hr>", unsafe_allow_html=True)
-    if os.path.exists("dmm.jpg"):
-        st.image("dmm.jpg", width=200, caption="DIVYANSH MITTAL (Creator of CHATBOT.ai)", use_column_width=True)
-    else:
-        st.error("Developer image not found.")
-
-    st.markdown(
-        """
-        <div style='text-align: center;'>
-            <h2>About Me: Divyansh Mittal, Creator of Chatbot.ai</h2>
-            <p>Hey there! I'm Divyansh Mittal, the brain behind Chatbot.ai. At just 13 years old, I'm passionate about artificial intelligence and programming. Chatbot.ai is my brainchild, born out of my fascination with how technology can shape our future.</p>
-            <p>With Chatbot.ai, I'm on a mission to revolutionize the way we interact with AI. My goal is to make AI accessible and engaging for everyone, inspiring the next generation of creators and thinkers.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.1.0</h3>", unsafe_allow_html=True)
+    if 'toast_shown' not in st.session_state:
+        st.toast("CHATBOT.ai just got updated !" , icon = '🗞️')
+        st.session_state.toast_shown = True 
+ 
     st.markdown(
         """
         <style>
-        .support-section {
-            background-color: black;
-            color: white;
+        .box {
+            border: 1.8px solid grey;
             padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .support-section a {
-            color: white;
-            text-decoration: none;
-        }
-        .support-section a:hover {
-            text-decoration: underline;
+            border-radius: 15px;
         }
         </style>
-        <div class="support-section">
-            <h4>Support</h4>
-            <p>If you have any questions or need support, please contact us at:</p>
-            <p><a href="mailto:chatbot.aidm@gmail.com">chatbot.aidm@gmail.com</a></p>
-        </div>
         """,
         unsafe_allow_html=True
     )
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown('<div class="box">🎓 How to study effeciently ?</div>', unsafe_allow_html=True)
+
+    with col2:
+        st.markdown('<div class="box">📝 Brief Description of J.R.D Tata</div>', unsafe_allow_html=True)
+
+    with col3:
+        st.markdown('<div class="box">🪖 Sacrifices of Indian Freedom Fighters</div>', unsafe_allow_html=True)
+    
+    if 'chat_history' not in st.session_state:
+        st.session_state['chat_history'] = []
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    prompt = st.chat_input("What is up?")
+    if prompt:
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            try:
+                response = get_gemini_response(prompt)
+                # Display response letter by letter
+                placeholder = st.empty()
+                full_response = ""
+                for letter in response:
+                    full_response += letter
+                    placeholder.markdown(full_response)
+                    time.sleep(0.01)  # Adjust the speed of typing simulation
+                st.session_state.messages.append({"role": "assistant", "content": response})
+            except Exception as e:
+                st.error(f"Error getting response: {e}")
 
 elif page == "What's New?":
     whats_new.app()
@@ -259,17 +271,25 @@ elif page == "Privacy Policy":
 elif page == "Terms of Use":
     terms_of_use.app()
 
+elif page == "Chat History":
+    st.title("Coming Soon !")
+
 elif page == "Blog":
     blog_1.app()
 
-elif page == "Chat History":
-    st.markdown("<h1 style='text-align: left;'>Chat History</h1>", unsafe_allow_html=True)
-    if 'chat_history' in st.session_state and st.session_state['chat_history']:
-        for speaker, message in st.session_state['chat_history']:
-            st.markdown(f"**{speaker}:** {message}")
-        
-        if st.button("Clear Chat History"):
-            st.session_state['chat_history'] = []  
-            st.markdown("Chat history cleared! 👍")
-    else:
-        st.markdown("No chat history yet 😞.")
+elif page == "About Us":
+    about_us.app()
+
+elif page == "Get in Touch":
+    st.header("Get in touch with me ! 📫")
+    contact_form = """
+    <form action="https://formsubmit.co/chatbot.aidm@gmail.com" method="POST">
+         <input type="hidden" name="_captcha" value="false">
+         <input type="text" name="name" placeholder="Your Name" required>
+         <input type="email" name="email" placeholder="Your email" required>
+         <textarea name="message" placeholder="Your message" required></textarea>
+         <button type="submit">Send</button>
+    </form>
+    """
+    st.markdown(contact_form, unsafe_allow_html=True)
+

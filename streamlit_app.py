@@ -153,7 +153,7 @@ icons = {
 for nav_item, display_name in nav_items.items():
     if st.sidebar.button(f"{icons[nav_item]} {display_name}", key=nav_item):
         set_nav_item(nav_item)
-        st.experimental_rerun()
+        st.rerun()
         st.sidebar.clear()
 
 # Custom CSS for sidebar buttons

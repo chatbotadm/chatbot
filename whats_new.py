@@ -6,6 +6,13 @@ def app():
     st.markdown(
         """
         
+        ## Version 1.1.0 (Updated on June 26,2024)
+        - UI Enhancements
+        - Feedback Form
+        - Improved Error Handling
+        - Fixed INSUFFECIENT_AUTH_TOKEN
+        - Fixed Bugs
+        
         ## Version 1.0.9 (Updated on June 25,2024) 
         - Fixed Bugs
         

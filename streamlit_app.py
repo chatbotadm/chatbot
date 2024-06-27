@@ -11,8 +11,9 @@ import terms_of_use
 import privacy_policy
 import blog_1
 import about_us
-import support
 import logging
+import json
+
 
 # Set page title and favicon
 favicon_path = "./favicon.ico"
@@ -33,8 +34,16 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")
 # Initialize the chat model
-model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[])
+# File path for storing chat history
+CHAT_HISTORY_FILE = 'chat_history.json'
+
+# Load existing chat history from file
+if os.path.exists(CHAT_HISTORY_FILE):
+    with open(CHAT_HISTORY_FILE, 'r') as f:
+        chat_history = json.load(f)
+else:
+    chat_history = []
 
 def get_gemini_response(question, retries=2, delay=2):
     for attempt in range(retries):
@@ -72,7 +81,7 @@ def get_gemini_response(question, retries=2, delay=2):
                 
         except Exception as e:
             logging.error(f"Error getting response: {e}")
-            if attempt < retries - 1:
+            if attempt < retries -1:
                 time.sleep(delay)
             else:
                 return f"An error occurred: {e}"
@@ -243,6 +252,7 @@ if page == "Chatbot":
     prompt = st.chat_input("What is up?")
     if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
+        st.session_state.chat_history.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
@@ -257,6 +267,7 @@ if page == "Chatbot":
                     placeholder.markdown(full_response)
                     time.sleep(0.01)  # Adjust the speed of typing simulation
                 st.session_state.messages.append({"role": "assistant", "content": response})
+                st.session_state.chat_history.append({"role": "assistant", "content": response})
             except Exception as e:
                 st.error(f"Error getting response: {e}")
 
@@ -270,7 +281,16 @@ elif page == "Terms of Use":
     terms_of_use.app()
 
 elif page == "Chat History":
-    st.title("Coming very Soon !")
+    st.title("Chat History")
+    if 'chat_history' in st.session_state:
+        for message in st.session_state.chat_history:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+        if st.button("Clear Chat History"):
+            st.session_state.chat_history = []
+            st.rerun()
+    else:
+        st.write("No Chat History Yet.😞")
 
 elif page == "Blog":
     blog_1.app()
@@ -290,4 +310,3 @@ elif page == "Get in Touch":
     </form>
     """
     st.markdown(contact_form, unsafe_allow_html=True)
-

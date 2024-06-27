@@ -210,7 +210,7 @@ if page != "Blog":
 if page == "Chatbot":
 
     st.markdown("<h1 style='text-align: center;'>AI CHATBOT</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.1.0</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-size: 12px;'>v1.1.1</h3>", unsafe_allow_html=True)
     if 'toast_shown' not in st.session_state:
         st.toast("CHATBOT.ai just got updated !" , icon = '🗞️')
         st.session_state.toast_shown = True 

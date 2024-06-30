@@ -14,7 +14,6 @@ import about_us
 import logging
 import json
 
-
 # Set page title and favicon
 favicon_path = "./favicon.ico"
 if os.path.exists(favicon_path):
@@ -166,29 +165,7 @@ for nav_item, display_name in nav_items.items():
         st.sidebar.clear()
 
 # Custom CSS for sidebar buttons
-st.markdown(
-    """
-    <style>
-        .sidebar .sidebar-content .stButton button {
-            width: 100%;
-            text-align: left;
-            padding: 10px 20px;
-            color: white;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .sidebar .sidebar-content .stButton button:hover,
-        .sidebar .sidebar-content .stButton button:focus {
-            background-color: #444;
-            border-radius: 5px;
-            color: white;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+
 
 page = st.session_state.get('selected_nav_item', "Chatbot")
 
@@ -246,17 +223,38 @@ if page == "Chatbot":
         st.session_state.messages = []
 
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        role = message["role"]
+        content = message["content"]
+        with st.container():
+            alignment_class = 'user' if role == 'user' else 'assistant'
+            st.markdown(
+                f"""
+                <div class="chat-message {alignment_class}">
+                    <div class="chat-bubble {alignment_class}">
+                        {content}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
     prompt = st.chat_input("What is up?")
     if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.chat_history.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+        with st.container():
+            st.markdown(
+                f"""
+                <div class="chat-message user">
+                    <div class="chat-bubble user">
+                        {prompt}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        with st.chat_message("assistant"):
+        with st.container():
             try:
                 response = get_gemini_response(prompt)
                 # Display response letter by letter
@@ -264,7 +262,16 @@ if page == "Chatbot":
                 full_response = ""
                 for letter in response:
                     full_response += letter
-                    placeholder.markdown(full_response)
+                    placeholder.markdown(
+                        f"""
+                        <div class="chat-message assistant">
+                            <div class="chat-bubble assistant">
+                                {full_response}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
                     time.sleep(0.01)  # Adjust the speed of typing simulation
                 st.session_state.messages.append({"role": "assistant", "content": response})
                 st.session_state.chat_history.append({"role": "assistant", "content": response})
@@ -284,11 +291,23 @@ elif page == "Chat History":
     st.title("Chat History")
     if 'chat_history' in st.session_state:
         for message in st.session_state.chat_history:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+            role = message["role"]
+            content = message["content"]
+            with st.container():
+                alignment_class = 'user' if role == 'user' else 'assistant'
+            st.markdown(
+                f"""
+                <div class="chat-message {alignment_class}">
+                    <div class="chat-bubble {alignment_class}">
+                        {content}
+                    </div>
+                </div>
+                """,
+                    unsafe_allow_html=True
+                )
         if st.button("Clear Chat History"):
             st.session_state.chat_history = []
-            st.rerun()
+            st.experimental_rerun()
     else:
         st.write("No Chat History Yet.😞")
 

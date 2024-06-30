@@ -53,7 +53,7 @@ button[type=submit] {
 
 /* When moving the mouse over the submit button, add a darker green color */
 button[type=submit]:hover {
-  background-color: #1daa5a;
+  background-color: #0f9b4b;
 }
 /* Example: Enhanced button styles */
 .stButton button {
@@ -94,5 +94,73 @@ body {
       width: 100%;
       padding: 10px;
   }
+}
+.sidebar .sidebar-content .stButton button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 20px;
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.sidebar .sidebar-content .stButton button:hover,
+.sidebar .sidebar-content .stButton button:focus {
+  background-color: #444;
+  border-radius: 5px;
+  color: white;
+}
+.chat-message {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.chat-message.user {
+  justify-content: flex-end;
+}
+.chat-bubble {
+  max-width: 65%;
+  padding: 9px;
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: .8;
+  background-color: #fff;
+  border: 1px solid #e6e6e6;
+  position: reative;
+}
+.chat-bubble::before{
+content: '';
+position: absolute;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-top: 9px solid transparent;
+border-bottom: 14px solid #B900FF;
+right: 2px;
+right: -4.5px;
+
+}
+.chat-bubble.assistant::before {
+content: '';
+position: absolute;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-top: 10px solid transparent;
+border-bottom: 13px solid #0017FE; /* Change this to your desired color */
+right: 690px; /* Adjust as needed */
+
+}
+
+.chat-bubble.user {
+  background-color: #B900FF;
+  border-top-right-radius: 12;
+  border: 1px solid #cdeccd;
+  color: #FFFFFF; /* text color */
+}
+.chat-bubble.assistant {
+  background-color: #0017FE;
+  border-bottom-left-radius: 0;
+  border: 1px solid #e6e6e6;
+  color: #FFFFFF; /* text color */
 }
 

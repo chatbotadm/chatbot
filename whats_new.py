@@ -6,6 +6,10 @@ def app():
     st.markdown(
         """
         
+        ## Version 1.1.2 (Updated on June 30,2024)
+        - UI Enhancement
+        - Fixed Bugs
+        
         ## Version 1.1.1 (Updated on June 27,2024)
         - Fixed Chat History 
         - UI Enhancement
